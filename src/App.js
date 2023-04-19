@@ -1,84 +1,135 @@
-import logo from './logo.svg';
-import './App.css';
-import Button from './Components/Button/Button';
-import Results from './Components/Results/Results';
-import React from 'react';
+import React, { Component} from "react"
+
+import "bootstrap/dist/css/bootstrap.min.css"
+import "./album.css"
+
+import "bootstrap/dist/js/bootstrap.min.js"
+
 import axios from "axios"
 
-class App extends React.Component{
-  constructor(){
-    super()
+class App extends Component{
 
-    this.state = {
-        result: {
-          poster: null,
-          title: null,
-          actors: null,
-          country: null,
-          is_data_available: false
+    constructor(){
+        super()
+
+        this.moviesResult = []
+
+        this.state = {
+            movies: []
         }
+
+
     }
-  }
 
-  getMovies = () => {
-    
-    axios.get("http://www.omdbapi.com/?i=tt3896198&apikey=81e3fca8").then((feedback) => {
+    render(){
 
-      console.log(feedback.data);
-      //pass to the UI
-      if(feedback.status == 200){
-        //I can proceed
-        //let result = feedback.data.Poster
-        let result = {
-          poster: feedback.data.Poster,
-          title: feedback.data.Title,
-          actors: feedback.data.Actors,
-          country: feedback.data.Country,
-          is_data_available: true
-        }
-        
-        //change state of result
+        axios.get("http://www.omdbapi.com/?s=Spiderman&apikey=81e3fca8").then((results) => {
+
+        console.log(results)
+
         this.setState({
-          result: result
+            movies: results.data.Search
         })
 
-      }else{
-        //error 
-      }
+       this.moviesResult = this.state.movies.map(( movie, index ) => {
+
+        return (
+        <div class="col-md-4" key={index}>
+        <div class="card mb-4 shadow-sm">
+          <img src={movie.Poster} />
+
+          <div class="card-body">
+            <p class="card-text">{movie.Title}</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="btn-group">
+                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+              </div>
+              <small class="text-muted">9 mins</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      )
+    
+    })
+
+
 
     })
-    
 
-
-  }
-
-  render(){
-
-    let resultsComponent;
-
-    if(this.state.result == null){
-    
-        resultsComponent = <Results />
-    }else{
-      resultsComponent = <Results results_prop={this.state.result}  />
-    }
-
-    return (
-      <div className="App">
-        <header className="App-header">
-          <h3>
-            Get Latest Movies Now
-          </h3>
-          <Button get_movies_prop={this.getMovies}/>
-          {resultsComponent}
-        </header>
+     
+    return <div>
+                   <header>
+  <div class="collapse bg-dark" id="navbarHeader">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-8 col-md-7 py-4">
+          <h4 class="text-white">About</h4>
+          <p class="text-muted">Add some information about the album below, the author, or any other background context. Make it a few sentences long so folks can pick up some informative tidbits. Then, link them off to some social networking sites or contact information.</p>
+        </div>
+        <div class="col-sm-4 offset-md-1 py-4">
+          <h4 class="text-white">Contact</h4>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white">Follow on Twitter</a></li>
+            <li><a href="#" class="text-white">Like on Facebook</a></li>
+            <li><a href="#" class="text-white">Email me</a></li>
+          </ul>
+        </div>
       </div>
-    );
-  }
+    </div>
+  </div>
+  <div className="navbar navbar-dark bg-dark shadow-sm">
+    <div className="container d-flex justify-content-between">
+      <a href="#" class="navbar-brand d-flex align-items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true" class="mr-2" viewBox="0 0 24 24" focusable="false"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <strong>Movies Base</strong>
+      </a>
+      <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+        <span className="navbar-toggler-icon"></span>
+      </button>
+    </div>
+  </div>
+</header>
 
-  // componentDidUpdate(){
+<main role="main">
 
-  // }
+  <section class="jumbotron text-center">
+    <div class="container">
+      <h1>Movies Base</h1>
+      <p class="lead text-muted">Access all the movies that you love in one place...</p>
+      <p>
+        <a href="#" class="btn btn-primary my-2">Get Started</a>
+    
+      </p>
+    </div>
+  </section>
+
+  <div class="album py-5 bg-light">
+    <div class="container">
+
+      <div class="row">
+        {this.moviesResult}
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="text-muted">
+  <div class="container">
+    <p class="float-right">
+      <a href="#">Back to top</a>
+    </p>
+    <p>Album example is &copy; Bootstrap, but please download and customize it for yourself!</p>
+    <p>New to Bootstrap? <a href="/">Visit the homepage</a> or read our <a href="/docs/4.6/getting-started/introduction/">getting started guide</a>.</p>
+  </div>
+</footer>
+
+                </div>
+
+
+    }
 
 }
 
